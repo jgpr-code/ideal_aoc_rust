@@ -2,11 +2,30 @@
 #![feature(lazy_cell)]
 extern crate test;
 
+use crate::common::Answer;
 use anyhow::Result;
 use std::io;
 
 #[macro_use]
 mod common {
+    use std::fmt::Display;
+    // the return type for parts sometime its Numbers sometimes its Strings
+    #[derive(Debug, PartialEq, Eq)]
+    pub enum Answer {
+        Num(i128),
+        #[allow(dead_code)]
+        Str(String),
+    }
+
+    impl Display for Answer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match &self {
+                Answer::Num(i) => write!(f, "{}", i),
+                Answer::Str(s) => write!(f, "{}", s),
+            }
+        }
+    }
+
     #[allow(unused_macros)]
     macro_rules! regex {
         ($re:literal) => {{
@@ -43,12 +62,12 @@ pub fn main() -> Result<()> {
     Ok(())
 }
 
-pub fn part_one(input: &str) -> Result<i128> {
+pub fn part_one(input: &str) -> Result<Answer> {
     let input = parse_input(input)?;
     solve_one(&input)
 }
 
-pub fn part_two(input: &str) -> Result<i128> {
+pub fn part_two(input: &str) -> Result<Answer> {
     let input = parse_input(input)?;
     solve_two(&input)
 }
@@ -80,6 +99,7 @@ fn parse_line(line: &str) -> i128 {
     ifd * 10 + ild
 }
 
+// doesn't work due to overlap
 fn parse_advanced(line: &str) -> i128 {
     let spelled_digits = vec![
         ("one", "one1one"),
@@ -102,24 +122,24 @@ fn parse_advanced(line: &str) -> i128 {
     result
 }
 
-fn solve_one(input: &Input) -> Result<i128> {
+fn solve_one(input: &Input) -> Result<Answer> {
     let Input { lines } = input;
 
     let mut sum = 0;
     for line in lines {
         sum += parse_line(line);
     }
-    Ok(sum)
+    Ok(Answer::Num(sum))
 }
 
-fn solve_two(input: &Input) -> Result<i128> {
+fn solve_two(input: &Input) -> Result<Answer> {
     let Input { lines } = input;
 
     let mut sum = 0;
     for line in lines {
         sum += parse_advanced(line);
     }
-    Ok(sum)
+    Ok(Answer::Num(sum))
 }
 
 #[cfg(test)]
@@ -134,26 +154,26 @@ mod tests {
 
     #[test]
     fn test_one() -> Result<()> {
-        let i128 = super::part_one(&TEST)?;
-        assert_eq!(i128, 142);
+        let answer = super::part_one(&TEST)?;
+        assert_eq!(answer, Answer::Num(142));
         Ok(())
     }
     #[test]
     fn part_one() -> Result<()> {
-        let i128 = super::part_one(&INPUT)?;
-        assert_eq!(i128, 54450);
+        let answer = super::part_one(&INPUT)?;
+        assert_eq!(answer, Answer::Num(54450));
         Ok(())
     }
     #[test]
     fn test_two() -> Result<()> {
-        let i128 = super::part_two(&TEST2)?;
-        assert_eq!(i128, 281);
+        let answer = super::part_two(&TEST2)?;
+        assert_eq!(answer, Answer::Num(281));
         Ok(())
     }
     #[test]
     fn part_two() -> Result<()> {
-        let i128 = super::part_two(&INPUT)?;
-        assert_eq!(i128, 54265);
+        let answer = super::part_two(&INPUT)?;
+        assert_eq!(answer, Answer::Num(54265));
         Ok(())
     }
 
