@@ -2,11 +2,30 @@
 #![feature(lazy_cell)]
 extern crate test;
 
+use crate::common::Answer;
 use anyhow::{anyhow, Result};
 use std::io;
 
 #[macro_use]
 mod common {
+    use std::fmt::Display;
+    // the return type for parts sometime its Numbers sometimes its Strings
+    #[derive(Debug, PartialEq, Eq)]
+    pub enum Answer {
+        Num(i128),
+        #[allow(dead_code)]
+        Str(String),
+    }
+
+    impl Display for Answer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match &self {
+                Answer::Num(i) => write!(f, "{}", i),
+                Answer::Str(s) => write!(f, "{}", s),
+            }
+        }
+    }
+
     #[allow(unused_macros)]
     macro_rules! regex {
         ($re:literal) => {{
@@ -42,13 +61,12 @@ pub fn main() -> Result<()> {
     println!("part2: {}", part_two(&stdin)?);
     Ok(())
 }
-
-pub fn part_one(input: &str) -> Result<i128> {
+pub fn part_one(input: &str) -> Result<Answer> {
     let input = parse_input(input)?;
     solve_one(&input)
 }
 
-pub fn part_two(input: &str) -> Result<i128> {
+pub fn part_two(input: &str) -> Result<Answer> {
     let input = parse_input(input)?;
     solve_two(&input)
 }
@@ -148,16 +166,16 @@ fn parse_set(set: &str) -> Result<GameSet> {
     Ok(GameSet { red, green, blue })
 }
 
-fn solve_one(input: &Input) -> Result<i128> {
+fn solve_one(input: &Input) -> Result<Answer> {
     let Input { games } = input;
     let sum = games.iter().filter(|g| g.is_valid()).map(|g| g.id).sum();
-    Ok(sum)
+    Ok(Answer::Num(sum))
 }
 
-fn solve_two(input: &Input) -> Result<i128> {
+fn solve_two(input: &Input) -> Result<Answer> {
     let Input { games } = input;
     let sum = games.iter().map(|g| g.fewest_possible().power()).sum();
-    Ok(sum)
+    Ok(Answer::Num(sum))
 }
 
 #[cfg(test)]
@@ -172,25 +190,25 @@ mod tests {
     #[test]
     fn test_one() -> Result<()> {
         let answer = super::part_one(&TEST)?;
-        assert_eq!(answer, 8);
+        assert_eq!(answer, Answer::Num(8));
         Ok(())
     }
     #[test]
     fn part_one() -> Result<()> {
         let answer = super::part_one(&INPUT)?;
-        assert_eq!(answer, 2720);
+        assert_eq!(answer, Answer::Num(2720));
         Ok(())
     }
     #[test]
     fn test_two() -> Result<()> {
         let answer = super::part_two(&TEST)?;
-        assert_eq!(answer, 2286);
+        assert_eq!(answer, Answer::Num(2286));
         Ok(())
     }
     #[test]
     fn part_two() -> Result<()> {
         let answer = super::part_two(&INPUT)?;
-        assert_eq!(answer, 71535);
+        assert_eq!(answer, Answer::Num(71535));
         Ok(())
     }
 
