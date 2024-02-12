@@ -14,6 +14,7 @@ Upsides:
 
 Downsides:
 
+- Common code (that is not part of another lib yet) needs to be repeated every time
 - Fully compiled Advent of Code takes a huge amount of space (>2GB, TODO specify exactly), because of redundantly compiled dependencies
 - No overarching program that is able to run & test each day
 
