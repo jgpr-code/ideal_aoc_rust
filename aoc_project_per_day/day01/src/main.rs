@@ -1,5 +1,4 @@
 #![feature(test)]
-#![feature(lazy_cell)]
 extern crate test;
 
 use crate::common::Answer;
