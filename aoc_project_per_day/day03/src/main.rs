@@ -1,59 +1,11 @@
 #![feature(test)]
 extern crate test;
 
-use crate::common::Answer;
-use anyhow::Result;
+use common::anyhow::Result;
+
+use common::{regx, Answer};
 use std::collections::{HashMap, HashSet};
 use std::io;
-
-#[macro_use]
-mod common {
-    use std::fmt::Display;
-    // the return type for parts sometime its Numbers sometimes its Strings
-    #[derive(Debug, PartialEq, Eq)]
-    pub enum Answer {
-        Num(i128),
-        #[allow(dead_code)]
-        Str(String),
-    }
-
-    impl Display for Answer {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            match &self {
-                Answer::Num(i) => write!(f, "{}", i),
-                Answer::Str(s) => write!(f, "{}", s),
-            }
-        }
-    }
-
-    #[allow(unused_macros)]
-    macro_rules! regex {
-        ($re:literal) => {{
-            static RE: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
-                // println!("initializing regex {}", $re);
-                regex::Regex::new($re).unwrap()
-            });
-            &RE
-        }};
-    }
-
-    #[cfg(test)]
-    #[macro_use]
-    pub mod test_utils {
-        use std::fs;
-        pub fn read_from_file(filename: &str) -> String {
-            println!("reading {}", filename);
-            fs::read_to_string(filename)
-                .unwrap_or_else(|msg| panic!("error reading {}: {}", filename, msg))
-        }
-
-        macro_rules! local_file {
-            ($file:literal) => {
-                LazyLock::new(|| common::test_utils::read_from_file(&format!("src/{}", $file)))
-            };
-        }
-    }
-}
 
 pub fn main() -> Result<()> {
     let stdin = io::read_to_string(io::stdin())?;
@@ -189,7 +141,7 @@ fn parse_input(input: &str) -> Result<Input> {
     //     .collect::<Vec<_>>();
     let lines: Vec<String> = input.lines().map(|s| String::from(s)).collect();
 
-    let number_regex = regex!(r"\d+");
+    let number_regex = regx!(r"\d+");
 
     let mut numbers = Vec::new(); // TODO with_capacity?
     let mut gears = Vec::new();
@@ -232,6 +184,7 @@ fn solve_two(input: &Input) -> Result<Answer> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use common::test_utils::*;
     use std::sync::LazyLock;
     use test::Bencher;
 
