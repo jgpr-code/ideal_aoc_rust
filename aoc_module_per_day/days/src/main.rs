@@ -3,6 +3,10 @@ extern crate test;
 
 mod common;
 mod day01;
+mod day02;
+mod day03;
+mod day04;
+mod day05;
 mod solver;
 
 use solver::Solver;
@@ -22,5 +26,13 @@ fn main() {
     let mut solver = Solver::new();
     solver.add(1, 1, day01::part_one);
     solver.add(1, 2, day01::part_two);
+    solver.add(2, 1, day02::part_one);
+    solver.add(2, 2, day02::part_two);
+    solver.add(3, 1, day03::part_one);
+    solver.add(3, 2, day03::part_two);
+    solver.add(4, 1, day04::part_one);
+    solver.add(4, 2, day04::part_two);
+    solver.add(5, 1, day05::part_one);
+    solver.add(5, 2, day05::part_two);
     solver.solve(opt);
 }

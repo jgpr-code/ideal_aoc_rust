@@ -27,6 +27,7 @@ macro_rules! regx {
         &RE
     }};
 }
+pub use regx;
 
 #[cfg(test)]
 #[macro_use]
@@ -52,7 +53,7 @@ pub mod test_utils {
     macro_rules! local_file {
         ($file:literal) => {
             LazyLock::new(|| {
-                test_utils::read_from_file(&format!(
+                read_from_file(&format!(
                     "src/{}/{}",
                     $crate::extract_day_from_path!(),
                     $file
