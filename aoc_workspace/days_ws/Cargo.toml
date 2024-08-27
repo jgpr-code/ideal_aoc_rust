@@ -1,8 +1,15 @@
-[package]
-name = "days_ws"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = [
+    "common",
+    "day01",
+    "day02",
+    "day03",
+    "day04",
+    "day05",
+]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+resolver = "2"
 
-[dependencies]
+[workspace.dependencies]
+anyhow = "1.0.79"
+regex = "1.10.3"
