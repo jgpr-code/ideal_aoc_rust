@@ -35,6 +35,10 @@ Downsides:
 
 Still, not everything clear here (TODO)
 
+### The fourth setup (one package with one common library crate + binary crates for each day)
+
+Potentially, this is not as good as the workspace setup, but I want to test it.
+
 ## The scope of this project
 
 - Enable the 3 - 5 days from Advent of Code 2023 for all the different setups
